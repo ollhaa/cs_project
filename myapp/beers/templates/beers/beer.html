@@ -1,0 +1,37 @@
+{% extends "beers/base.html" %}
+{% block navbar %}
+            <a class="nav-item nav-link" href="/home">HOME</a>
+            <!-- <a class="nav-item nav-link" href="/about">ABOUT</a> -->  
+            <!--  <a class="nav-item nav-link" href="#">LOGIN</a> -->
+            <a class="nav-item nav-link" href="/logout">LOGOUT</a>
+            <!--  <a class="nav-item nav-link" href="#">REGISTER</a> -->
+            <a class= "nav-item nav-link"> Hi {{ user.username }}! You are logged in</a>
+{% endblock navbar %}
+
+{% block content %}
+<div>
+    <h2>ARVOSTELE</h2>
+        <form action="/beer/" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>
+        Stars: <br>
+        <input type="radio" id="1" name="stars" value="1" checked="1" >
+        <label for="rate1">1</label><br> 
+        <input type="radio" id="2" name="stars" value="2">
+        <label for="rate2">2</label><br>  
+        <input type="radio" id="3" name="stars" value="3">
+        <label for="rate3">3</label><br> 
+        <input type="radio" id="4" name="stars" value="4">
+        <label for="rate4">4</label><br> 
+        <input type="radio" id="5" name="stars" value="5">
+        <label for="rate5">5</label><br> 
+        Comment: <br>
+        <textarea id="review" name="review" rows="4" cols="50"></textarea>
+
+            <p>
+        <input type="submit" value="RATE">
+        </form>
+<p>
+        
+</div>
+{% endblock content %}
