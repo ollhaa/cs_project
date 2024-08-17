@@ -3,15 +3,29 @@
             <a class="nav-item nav-link" href="/home">HOME</a>
             <!-- <a class="nav-item nav-link" href="/about">ABOUT</a> -->  
             <!--  <a class="nav-item nav-link" href="#">LOGIN</a> -->
+            <a class="nav-item nav-link" href="#">FEEDBACK</a> 
             <a class="nav-item nav-link" href="/logout">LOGOUT</a>
             <!--  <a class="nav-item nav-link" href="#">REGISTER</a> -->
-            <a class= "nav-item nav-link"> Hi {{ user.username }}! You are logged in</a>
+            <a class= "nav-link welcome" > Hi {{ user.username }}! You are logged in</a>
 {% endblock navbar %}
 
 {% block content %}
 {% if user.is_authenticated %}
 
-<p></p>
+
+
+{% if messages %}
+{% for message in messages %}
+   <div class="alert {{ message.tags }} alert-dismissible shadow fade show" role="alert">
+    {{ message | safe }} 
+    </div>
+{% endfor %}
+
+{% endif %}
+
+
+<div class="scroller">
+
     {% for beer in beers %}
         <article class="media content-section">
           <div class="media-body">
@@ -24,7 +38,7 @@
              {{ beer.beer_name }}. Counry: {{ beer.beer_country }} <br>
              <a href="{{ beer.beer_link }}"> Details</a> <br>
              Creator: {{ beer.author }}, Time: {{ beer.pub_date }} <br>
-             <a href="/beer/{{ beer.id }}" >RATE!</a>  <a href="/review/{{ beer.id }}" >Other Reviews</a>
+             <a href="/beer/{{ beer.id }}" >RATE!</a>  <a href="/review/{{ beer.id }}" >Other Reviews</a>  
              
             </div>
             <h2><a class="article-title" href="#"></a></h2>
@@ -33,6 +47,7 @@
         </article>
     
     {% endfor %}
+</div>
     {% else %}
 <p>You are not logged in</p>
 {% endif %}

@@ -8,6 +8,11 @@
 {% endblock navbar %}
 
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+{% endif %}
 <div>
     <h2>REGISTER</h2>
         <form method="POST" action="">

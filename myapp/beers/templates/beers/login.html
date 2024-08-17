@@ -8,6 +8,15 @@
 {% endblock navbar %}
 
 {% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible shadow fade show" role="alert"> 
+        {{ message | safe }}
+    </div>
+    {% endfor %}
+{% endif %}
+
 <div>
     <h2>LOGIN</h2>
         <form action="/login/" method="POST" enctype="multipart/form-data">

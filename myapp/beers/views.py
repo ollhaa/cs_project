@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.template import loader
 from django.urls import reverse
 from django.views import generic
@@ -8,22 +8,32 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-
 from beers.models import Beer, Review
 from beers.forms import CreateUserForm
+from django.db import connection
+from django.utils import timezone
+from statistics import mean
 
 
-
-# Create your views here.
-#@login_required(login_url='login')
 @csrf_protect
 def homeView(request):
+    message = "Tervetuloa"
     if request.method == 'GET':
         if request.user.is_authenticated:
             template_name = 'beers/home.html'
             beers = Beer.objects.all()
+            
+            #c = connection.cursor()
+            #sql = "SELECT beer_id, AVG(stars), COUNT(*) FROM beers_review GROUP BY beer_id;"
+            #results = c.execute(sql).fetchall()
+            #print("beers: ", beers[0].beer_country)
+            #print(results)
+
+
+            #messages.success(request, 'You are logged in!')
             context = {'beers': beers}
             return render(request, template_name, context)
+            #return redirect('/home')
         else:
             return redirect("/login")
 
@@ -37,6 +47,9 @@ def loginView(request):
         if request.user.is_authenticated:
             return redirect("/home")
         else:
+            #message = "Tervetuloa"
+            #messages.add_message(request, messages.INFO, 'Hello world2.')
+            #messages.info(request, "You can login now!")
             template_name = 'beers/login.html'
             return render(request, template_name)
     else:
@@ -49,68 +62,117 @@ def loginView(request):
             try:
                 login(request, user)
             #template_name = 'beers/home.html'
+                messages.info(request, f"You are logged in!")
                 return redirect("/home")
             except(KeyError):
                 return redirect("/login")
         else: 
-            #messages.info(request, "Problems with name or password")
+            messages.error(request, f"Problems with name or password?")
             return redirect("/login")
 
 def logoutView(request):
     if request.method == 'GET':
         logout(request)
         #template_name = 'beers/logout.html'
+        messages.info(request, "You are logged out!")
         return redirect("/login")
 
 #@csrf_protect
 def registerView(request):
     form = CreateUserForm()
+    form = CreateUserForm(request.POST)
     if request.method == 'POST':
-        form = CreateUserForm(request.POST)
-        if form.is_valid():
+
+        if request.user.is_authenticated:
+            messages.info(request, "You are logged in!")
+            return redirect("/home")
+
+        
+        elif form.is_valid():
             #print("valid")
             form.save()
             #username = form.cleaned_data.get('username')
             #password = form.cleaned_data.get('password')
             #messages.success(request, f"Welcome, {username}")
             #template_name = 'beers/login.html'
+            messages.info(request, "You can login now!")
             return redirect('/login')
             
-    if request.user.is_authenticated:
-        return redirect("/home")
+    
+        else:
+            template_name = 'beers/register.html'
+            context = {'form': form}
+            messages.info(request, "Please, try again..")
+            return render(request, template_name, context)
     else:
         template_name = 'beers/register.html'
         context = {'form': form}
-        return render(request, template_name, context)
+        #messages.info(request, "Please, try again..")
+        return render(request, template_name, context) 
 
 @csrf_protect
-def beerView(request, pk):
+def beerView(request, id):
     if request.user.is_authenticated:
-        try:
-            beer = Beer.objects.get(id=pk)
-            #print("beer: ", beer)
+        if request.method=='GET':
+            print("get")
+            try:
+                beer = Beer.objects.get(id=id)
+            except Beer.DoesNotExist: 
+                return redirect('/home')
             context = {'beer': beer}
             return render(request, 'beers/beer.html', context)
-        except(KeyError):
-            return redirect('/home')
-
 
     else:
-        return redirect("/login")
+        return redirect('/login')
 
 @csrf_protect
-def reviewView(request, pk):
+def beerView2(request):
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            beer = request.POST.get("beer_id")
+            review = request.POST.get("review")
+            user_id = request.user.id
+            stars = request.POST.get("stars")
+            print("tässä: ", len(review), review)
+
+            given_reviews = Review.objects.all().filter(beer_id=beer, reviewer_id=user_id)
+            #given_reviews = Review.objects.all().filter(reviewer_id=user_id)
+            print("given reviews: ", given_reviews)
+            
+            if len(review) > 1 and len(given_reviews) ==0 :
+                c = connection.cursor()
+                now = timezone.now()
+                try:
+                    c.execute('INSERT INTO beers_review (beer_id, reviewer_id, review_text, stars, date_created) VALUES(%s,%s,%s,%s,%s);',
+                        (beer, user_id, review, stars,now,))
+                    c.close()
+                    messages.info(request, "Done!")
+                    return redirect('/home')
+
+                except (ValueError):
+                    raise(ValueError)
+                    
+            messages.error(request, "Only one review per product!")
+            return redirect('/home')
+
+    else:
+        return redirect('/login')
+
+
+@csrf_protect
+def reviewView(request, id):
     if request.user.is_authenticated:
         if request.method=='GET':
             try:
-                reviews = Review.objects.all().filter(beer_id=pk)
-
-                print("Tähdet" , reviews)
-                #print()
-                #print("beer: ", beer)
-                context = {'reviews': reviews}
-                return render(request, 'beers/review.html', context)
-            except(KeyError):
-                return redirect('/home')
+                reviews = Review.objects.all().filter(beer_id=id)
+                amount = len(reviews)
+                avg = "No reviews" if len(reviews) == 0  else round(mean([reviews[x].stars for x in range(0,len(reviews))]),2)
+                context = {'reviews': reviews, 'amount': amount, 'avg':avg}
+                
+            except Review.DoesNotExist:
+                raise Http404("Riview does not exist")
+                #return redirect('/home')
+            return render(request, 'beers/review.html', context)
+        
     else:
-        return redirect("/login")
+        return redirect('/login')

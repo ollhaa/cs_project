@@ -25,6 +25,6 @@ class Review(models.Model):
     stars = models.IntegerField(default=1)
     date_created = models.DateTimeField(default=timezone.now)
 
-    #def __str__(self):
-    #    return str(self.reviewer)
+    def average(self):
+        return 4 
 

@@ -9,8 +9,9 @@ urlpatterns = [
     path('login/', views.loginView, name='login'),
     path('register/', views.registerView, name='register'),
     path('home/', views.homeView, name='home'),
-    path('beer/<int:pk>/', views.beerView, name='beer'),
-    path('review/<int:pk>/', views.reviewView, name='review'),
+    path('beer/<int:id>/', views.beerView, name='beer'),
+    path('beer/', views.beerView2, name='beer2'),
+    path('review/<int:id>/', views.reviewView, name='review'),
     path('about/', views.aboutView, name='about'),
     path('logout/', views.logoutView, name='logout'),
 
