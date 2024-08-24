@@ -3,7 +3,6 @@
             <a class="nav-item nav-link" href="/home">HOME</a>
             <!-- <a class="nav-item nav-link" href="/about">ABOUT</a> -->  
             <!--  <a class="nav-item nav-link" href="#">LOGIN</a> -->
-            <a class="nav-item nav-link" href="#">FEEDBACK</a> 
             <a class="nav-item nav-link" href="/logout">LOGOUT</a>
             <!--  <a class="nav-item nav-link" href="#">REGISTER</a> -->
             <a class= "nav-link welcome" > Hi {{ user.username }}! You are logged in</a>
@@ -25,17 +24,14 @@
 
 
 <div class="scroller">
-
+  {% if beers %}
     {% for beer in beers %}
         <article class="media content-section">
           <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#"></a>
-              <small class="text-muted"></small>
-            </div>
+
 
             <div>
-             {{ beer.beer_name }}. Counry: {{ beer.beer_country }} <br>
+             {{ beer.beer_name | safe }}. Counry: {{ beer.beer_country | safe }} <br>
              <a href="{{ beer.beer_link }}"> Details</a> <br>
              Creator: {{ beer.author }}, Time: {{ beer.pub_date }} <br>
              <a href="/beer/{{ beer.id }}" >RATE!</a>  <a href="/review/{{ beer.id }}" >Other Reviews</a>  
@@ -47,6 +43,7 @@
         </article>
     
     {% endfor %}
+    {% endif %}
 </div>
     {% else %}
 <p>You are not logged in</p>

@@ -14,8 +14,8 @@ from django.db import connection
 from django.utils import timezone
 from statistics import mean
 
-
-@csrf_protect
+@login_required
+#@csrf_protect
 def homeView(request):
     message = "Tervetuloa"
     if request.method == 'GET':
@@ -53,9 +53,13 @@ def loginView(request):
             template_name = 'beers/login.html'
             return render(request, template_name)
     else:
+        #FLAW 5: Broken access control
+        #return redirect("/home")
+
+
+        #FIX FLAW 5: Broken access control
         username = request.POST.get("username")
         password = request.POST.get("password")
-        #print(password)
         user = authenticate(request, username = username, password = password)
         print(user)
         if user is not None:
@@ -72,12 +76,13 @@ def loginView(request):
 
 def logoutView(request):
     if request.method == 'GET':
+        #FIX FLAW 5: Broken access control
         logout(request)
         #template_name = 'beers/logout.html'
         messages.info(request, "You are logged out!")
         return redirect("/login")
 
-#@csrf_protect
+@csrf_protect
 def registerView(request):
     form = CreateUserForm()
     form = CreateUserForm(request.POST)
@@ -110,7 +115,8 @@ def registerView(request):
         #messages.info(request, "Please, try again..")
         return render(request, template_name, context) 
 
-@csrf_protect
+@login_required
+#@csrf_protect
 def beerView(request, id):
     if request.user.is_authenticated:
         if request.method=='GET':
@@ -136,21 +142,25 @@ def beerView2(request):
             print("tässä: ", len(review), review)
 
             given_reviews = Review.objects.all().filter(beer_id=beer, reviewer_id=user_id)
-            #given_reviews = Review.objects.all().filter(reviewer_id=user_id)
             print("given reviews: ", given_reviews)
             
             if len(review) > 1 and len(given_reviews) ==0 :
                 c = connection.cursor()
-                now = timezone.now()
+                now = timezone.now() 
                 try:
-                    c.execute('INSERT INTO beers_review (beer_id, reviewer_id, review_text, stars, date_created) VALUES(%s,%s,%s,%s,%s);',
-                        (beer, user_id, review, stars,now,))
-                    c.close()
+                    #FLAW 1: SQL injection:
+                    #c.executescript(f"INSERT INTO beers_review (beer_id, reviewer_id, review_text, stars, date_created) VALUES(
+                    #'{beer}', '{user_id}', '{review}', '{stars}', '{now}')"
+                    #c.close()
+                    #
+                    #FIX SQL injection:
+                    new = Review(beer_id=beer, reviewer_id = user_id, stars=stars, date_created=now, review_text=review)
+                    new.save()
                     messages.info(request, "Done!")
                     return redirect('/home')
 
-                except (ValueError):
-                    raise(ValueError)
+                except (TypeError):
+                    raise(TypeError)
                     
             messages.error(request, "Only one review per product!")
             return redirect('/home')
