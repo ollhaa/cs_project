@@ -1,10 +1,7 @@
 {% extends "beers/base.html" %}
 {% block navbar %}
             <a class="nav-item nav-link" href="/home">HOME</a>
-            <!-- <a class="nav-item nav-link" href="/about">ABOUT</a> -->  
-            <!--  <a class="nav-item nav-link" href="#">LOGIN</a> -->
             <a class="nav-item nav-link" href="/logout">LOGOUT</a>
-            <!--  <a class="nav-item nav-link" href="#">REGISTER</a> -->
             <a class= "nav-link welcome" > Hi {{ user.username }}! You are logged in</a>
 {% endblock navbar %}
 
@@ -22,9 +19,9 @@
 
 {% endif %}
 
-
+{% if beers %}
 <div class="scroller">
-  {% if beers %}
+  
     {% for beer in beers %}
         <article class="media content-section">
           <div class="media-body">
@@ -33,7 +30,7 @@
             <div>
              {{ beer.beer_name | safe }}. Counry: {{ beer.beer_country | safe }} <br>
              <a href="{{ beer.beer_link }}"> Details</a> <br>
-             Creator: {{ beer.author }}, Time: {{ beer.pub_date }} <br>
+             Creator: {{ beer.author | safe }}, Time: {{ beer.pub_date | safe}} <br>
              <a href="/beer/{{ beer.id }}" >RATE!</a>  <a href="/review/{{ beer.id }}" >Other Reviews</a>  
              
             </div>

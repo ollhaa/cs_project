@@ -1,8 +1,6 @@
 {% extends "beers/base.html" %}
 {% block navbar %}
             <a class="nav-item nav-link" href="/home">HOME</a>
-            <!-- <a class="nav-item nav-link" href="/about">ABOUT</a> -->  
-            <!--  <a class="nav-item nav-link" href="#">LOGIN</a> -->
             <a class="nav-item nav-link" href="/logout">LOGOUT</a>
 
             <a class= "nav-item nav-link"> Hi {{ user.username | safe }}! You are logged in</a>
@@ -12,7 +10,7 @@
 <div>
     <h2>RESULTS</h2>
 
-    Number of reviews: {{amount | safe }} <br>
+    Number of reviews: {{ amount | safe }} <br>
     Average stars: {{ avg | safe }} <br> <br>
 
     {% if reviews %}
@@ -21,9 +19,10 @@
     {% for review in reviews %}
     <article class="media content-section">
     <div class="media-body">
-
-        Arvostelu: {{ review.review_text | safe }} <br>
-        Tähdet: {{ review.stars | safe }}
+    <!-- FLAW 2: XSS  Arvostelu: {{ review.review_text}} <br> -->
+    <!-- FIX FLAW 2: XSS -->
+    Arvostelu: {{ review.review_text | escape | safe }} <br> 
+        Tähdet: {{ review.stars | escape | safe }}
 
     </div>
 </article>
