@@ -16,7 +16,7 @@ from statistics import mean
 
 @login_required
 def homeView(request):
-    message = "Tervetuloa"
+    message = "Welcome!"
     if request.method == 'GET':
         if request.user.is_authenticated:
             template_name = 'beers/home.html'
