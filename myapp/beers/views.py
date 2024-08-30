@@ -66,7 +66,7 @@ def logoutView(request):
 
 @csrf_protect
 def registerView(request):
-    #FIX or SOLVE FLAW 5 Broken authentication
+    #FIX or SOLVE FLAW 4: Identification and Authentication Failures
     form = CreateUserForm()
     form = CreateUserForm(request.POST)
     if request.method == 'POST':
@@ -85,7 +85,7 @@ def registerView(request):
             return render(request, template_name, context)
     else:
         template_name = 'beers/register.html'
-        # FIX or SOLVE FLAW 5 Broken authentication
+        # #FIX or SOLVE FLAW 4: Identification and Authentication Failures
         context = {'form': form}
         return render(request, template_name, context) 
 
@@ -122,7 +122,7 @@ def beerView2(request):
                     #'{beer}', '{user_id}', '{review}', '{stars}', '{now}')"
                     #c.close()
                     #
-                    #FIX SQL injection:
+                    #FIX FLAW 1: SQL injection:
                     new = Review(beer_id=beer, reviewer_id = user_id, stars=stars, date_created=now, review_text=review)
                     new.save()
                     messages.info(request, "Done!")

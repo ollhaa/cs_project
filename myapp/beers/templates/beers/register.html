@@ -17,9 +17,9 @@
 <div>
     <h2>REGISTER</h2>
         <form method="POST" action="">
-            <!-- FLAW 2 and FIX for FLAW2--> 
+            <!-- FLAW 2 and FIX for FLAW 2: Cross-site scripting (XSS)--> 
             {% csrf_token %} 
-            <!--FIX FLAW 5-->
+            <!--FIX FLAW 5: Broken access controll-->
             {{ form.as_p }}
             <p>
         

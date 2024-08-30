@@ -15,7 +15,7 @@
 <div>
     <h2>ARVOSTELE</h2>
         <form action="/beer/" method="POST" enctype="multipart/form-data">
-        <!-- FLAW 2 and FIX for FLAW2-->    {% csrf_token %}
+        <!-- FLAW 2 and FIX for FLAW 2: Cross-site scripting (XSS)-->    {% csrf_token %}
         <input type="hidden" id="beer_id" name="beer_id" value="{{ beer.id }}">
             
         Stars: <br>

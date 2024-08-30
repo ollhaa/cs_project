@@ -19,8 +19,8 @@
     {% for review in reviews %}
     <article class="media content-section">
     <div class="media-body">
-    <!-- FLAW 2: XSS  Arvostelu: {{ review.review_text}} <br> -->
-    <!-- FIX FLAW 2: XSS -->
+    <!-- FLAW 2: Cross-site scripting (XSS) Arvostelu: {{ review.review_text}} <br> -->
+    <!-- FIX FLAW 2: Cross-site scripting (XSS) -->
     Arvostelu: {{ review.review_text | escape | safe }} <br> 
         Tähdet: {{ review.stars | escape | safe }}
 

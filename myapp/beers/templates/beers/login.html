@@ -18,7 +18,7 @@
 <div>
     <h2>LOGIN</h2>
         <form action="/login/" method="POST" enctype="multipart/form-data">
-            <!-- FLAW 2 and FIX for FLAW2--> 
+            <!-- FLAW 2 and FIX for FLAW 2: Cross-site scripting (XSS)--> 
             {% csrf_token %}
             <p>
         Username: <br>
