@@ -90,7 +90,7 @@ def registerView(request):
         return render(request, template_name, context) 
 
 @login_required
-#@csrf_protect
+@csrf_protect
 def beerView(request, id):
     if request.user.is_authenticated:
         if request.method=='GET':
