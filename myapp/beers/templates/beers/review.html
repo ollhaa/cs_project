@@ -2,7 +2,7 @@
 {% block navbar %}
             <a class="nav-item nav-link" href="/home">HOME</a>
             <a class="nav-item nav-link" href="/logout">LOGOUT</a>
-
+            
             <a class= "nav-item nav-link"> Hi {{ user.username | safe }}! You are logged in</a>
 {% endblock navbar %}
 
@@ -22,7 +22,7 @@
     <!-- FLAW 2: Cross-site scripting (XSS) Arvostelu: {{ review.review_text}} <br> -->
     <!-- FIX FLAW 2: Cross-site scripting (XSS) -->
     Arvostelu: {{ review.review_text | escape | safe }} <br> 
-        Tähdet: {{ review.stars | escape | safe }}
+        Tähdet: {{ review.stars | escape | safe }} 
 
     </div>
 </article>
