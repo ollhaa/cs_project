@@ -67,7 +67,7 @@ Broken Authentication vulnerabilities allow users to impersonate other users. Th
 how to fix it... #
 In my app i have solved broken authentication problems such as poor passwords by using Django's CreateUserForm what force user to create enough strong password to use applications. Form is used in html and registerView. In the registerView terms are checked and saved.
 
-### FLAW 5: Broken access controll:
+### FLAW 5: Broken access control:
 
 exact source link pinpointing flaw 5: https://github.com/ollhaa/cs_project/blob/f83eef6ba6645f135a7e98727dcadc1a5a1ec681/myapp/beers/views.py#L43
 #
