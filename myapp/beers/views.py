@@ -90,7 +90,9 @@ def registerView(request):
 #FIX for FLAW 3: Cross-site Request Forgery (CSRF)
 #@csrf_protect
 @csrf_exempt#
+
 def beerView(request, id):
+    #FLAW 5: Broken access control:
     if request.method=='GET':#
         try:#
             beer = Beer.objects.get(id=id)#
@@ -98,6 +100,7 @@ def beerView(request, id):
             return redirect('/home')#
         context = {'beer': beer}#
         return render(request, 'beers/beer.html', context)#
+    #FIX FLAW 5: Broken access control:
     #if request.user.is_authenticated:
     #    if request.method=='GET':
     #        print("get")
