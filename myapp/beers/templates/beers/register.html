@@ -17,10 +17,11 @@
 <div>
     <h2>REGISTER</h2>
         <form method="POST" action="">
-            <!-- FLAW 2 and FIX for FLAW 2: Cross-site scripting (XSS)--> 
-            {% csrf_token %} 
-            <!--FIX FLAW 5: Broken access controll-->
+            <!-- FIX for FLAW 3: Cross-site Request Forgery (CSRF) {% csrf_token %}--> 
+             
             {{ form.as_p }}
+
+            
             <p>
         
         <input type="submit" value="Create User">

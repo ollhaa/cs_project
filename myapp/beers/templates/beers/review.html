@@ -2,16 +2,21 @@
 {% block navbar %}
             <a class="nav-item nav-link" href="/home">HOME</a>
             <a class="nav-item nav-link" href="/logout">LOGOUT</a>
+            <!-- FIX FLAW 2: Cross-site scripting (XSS)
+            <a class= "nav-item nav-link"> Hi {{ user.username }}! You are logged in</a>-->
+            <a class= "nav-item nav-link"> Hi {{ user.username | safe }}! You are logged in</a> <!---->
+             
             
-            <a class= "nav-item nav-link"> Hi {{ user.username | safe }}! You are logged in</a>
 {% endblock navbar %}
 
 {% block content %}
 <div>
     <h2>RESULTS</h2>
-
-    Number of reviews: {{ amount | safe }} <br>
-    Average stars: {{ avg | safe }} <br> <br>
+    <!-- FIX FLAW 2: Cross-site scripting (XSS) 
+        Number of reviews: {{ amount }} <br>
+        Average stars: {{ avg }} <br> <br> -->
+    Number of reviews: {{ amount | safe }} <br> <!---->
+    Average stars: {{ avg | safe }} <br> <br> <!---->
 
     {% if reviews %}
 
@@ -19,10 +24,11 @@
     {% for review in reviews %}
     <article class="media content-section">
     <div class="media-body">
-    <!-- FLAW 2: Cross-site scripting (XSS) Arvostelu: {{ review.review_text}} <br> -->
-    <!-- FIX FLAW 2: Cross-site scripting (XSS) -->
-    Arvostelu: {{ review.review_text | escape | safe }} <br> 
-        Tähdet: {{ review.stars | escape | safe }} 
+    <!-- FIX FLAW 2: Cross-site scripting (XSS) 
+     Arvostelu: {{ review.review_text }} <br> 
+        Tähdet: {{ review.stars }} -->
+    Arvostelu: {{ review.review_text | safe }} <br> <!---->
+        Tähdet: {{ review.stars | safe }} <!---->
 
     </div>
 </article>

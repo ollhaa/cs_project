@@ -6,20 +6,23 @@
 {% endblock navbar %}
 
 {% block content %}
-{% if user.is_authenticated %}
 
+{% if user.is_authenticated %} 
 
 
 {% if messages %}
 {% for message in messages %}
    <div class="alert {{ message.tags }} alert-dismissible shadow fade show" role="alert">
-    {{ message | safe }} 
+    <!-- FIX FLAW 2: Cross-site scripting (XSS) 
+      {{ message }}   
+    -->
+    {{ message | safe }} <!---->
     </div>
 {% endfor %}
 
 {% endif %}
 
-{% if beers %}
+{% if beers %} 
 <div class="scroller">
   
     {% for beer in beers %}
@@ -27,9 +30,15 @@
           <div class="media-body">
 
             <div>
-             {{ beer.beer_name | safe }}. Counry: {{ beer.beer_country | safe }} <br>
+              <!-- FIX FLAW 2: Cross-site scripting (XSS) 
+               {{ beer.beer_name }}. Counry: {{ beer.beer_country }} <br>
+              -->
+             {{ beer.beer_name | safe }}. Counry: {{ beer.beer_country | safe }} <br> <!---->
              <a href="{{ beer.beer_link }}"> Details</a> <br>
-             Creator: {{ beer.author | safe }}, Time: {{ beer.pub_date | safe}} <br>
+              <!-- FIX FLAW 2: Cross-site scripting (XSS) 
+              Creator: {{ beer.author }}, Time: {{ beer.pub_date }} <br>
+            -->
+             Creator: {{ beer.author | safe }}, Time: {{ beer.pub_date | safe }} <br> <!---->
              <a href="/beer/{{ beer.id }}" >RATE!</a>  <a href="/review/{{ beer.id }}" >Other Reviews</a>  
              
             </div>
@@ -39,9 +48,9 @@
         </article>
     
     {% endfor %}
-    {% endif %}
+    {% endif %} 
 </div>
     {% else %}
 <p>You are not logged in</p>
-{% endif %}
+{% endif %} 
 {% endblock content %}

@@ -9,8 +9,11 @@
 
 {% if messages %}
     {% for message in messages %}
-    <div class="alert {{ message.tags }} alert-dismissible shadow fade show" role="alert"> 
-        {{ message | safe }}
+    <div class="alert {{ message.tags }} alert-dismissible shadow fade show" role="alert">
+        <!-- FIX FLAW 2: Cross-site scripting (XSS) 
+        {{ message }}
+        -->
+        {{ message | safe }} <!---->
     </div>
     {% endfor %}
 {% endif %}
@@ -18,8 +21,8 @@
 <div>
     <h2>LOGIN</h2>
         <form action="/login/" method="POST" enctype="multipart/form-data">
-            <!-- FLAW 2 and FIX for FLAW 2: Cross-site scripting (XSS)--> 
-            {% csrf_token %}
+            <!-- FIX for FLAW 2: Cross-site scripting (XSS) {% csrf_token %} --> 
+            
             <p>
         Username: <br>
         <input type="text" name="username" rows="1" cols="20"></textarea>
