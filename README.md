@@ -2,9 +2,13 @@
 
 LINK: link to the repository https://github.com/ollhaa/cs_project
 #
-installation instructions if needed:
+Installation instructions if needed:
+
 1) git clone git@github.com:ollhaa/cs_project.git
-2) Admin: admin1234 and passwors admin1234 for permission to add beers. You can also create superuser by command "python manage.py createsuperuser" or just registerate by using "Register"
+2) "python3 manage.py migrate"
+3) Admin: admin1234 and passwors admin1234 for permission to add beers in Admin site. You can also create superuser by command "python manage.py createsuperuser" or just registerate by using "Register"
+
+By command "python3 manage.py runserver" you can start the app.
 
 #
 Idea of application is that persons with admin rights are able to put different beers (perhaps from alko.fi) for registered users to evaluate.
