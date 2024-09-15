@@ -56,7 +56,7 @@ We can just erase |safe because excape is default in Django.
 ### FLAW 3: Cross-site Request Forgery (CSRF)
 
 exact source link pinpointing flaw 3: 
-https://github.com/ollhaa/cs_project/blob/b1721dfd2f3cb8e3e8a9208d6866da422639d66c/myapp/beers/templates/beers/beer.html#L18
+https://github.com/ollhaa/cs_project/blob/90a34f0c8f6ad57d6600e17184ad9461505cc7b8/myapp/beers/templates/beers/beer.html#L22
 https://github.com/ollhaa/cs_project/blob/692da7820ee407712c4fe968ff68ee1aede31f23/myapp/beers/views.py#L115
 #
 Cross-site Request Forgery (CSRF) makes it possible to create requests from another site (source) to the web application (target). If the user who is accessing the source site is authenticated to the target web application, the browser of the user will send an authentication token (e.g. cookie) with the request to the target application as the user is accessing the source site, making it possible to access data as an authenticated user that should not be accessible. [2]. 
@@ -65,7 +65,7 @@ how to fix it...
 https://github.com/ollhaa/cs_project/blob/692da7820ee407712c4fe968ff68ee1aede31f23/myapp/beers/views.py#L115
 Comment line 115 off. This should be enough because @csrf is default.
 https://github.com/ollhaa/cs_project/blob/692da7820ee407712c4fe968ff68ee1aede31f23/myapp/beers/templates/beers/beer.html#L22
-Comment line 23 off and 22 on.
+Comment line 22 on.
 
 We also add @csrf tags to views with post and {% csrf_token %} to html templates. 
 
@@ -81,14 +81,20 @@ This is a bit artificial, but Django offers many attributes as a ready-make pack
 
 ### FLAW 5: Broken access control:
 
-exact source link pinpointing flaw 5: https://github.com/ollhaa/cs_project/blob/692da7820ee407712c4fe968ff68ee1aede31f23/myapp/beers/views.py#L149-L159
+exact source link pinpointing flaw 5: 
+https://github.com/ollhaa/cs_project/blob/90a34f0c8f6ad57d6600e17184ad9461505cc7b8/myapp/beers/views.py#L95-L102
+and https://github.com/ollhaa/cs_project/blob/90a34f0c8f6ad57d6600e17184ad9461505cc7b8/myapp/beers/views.py#L152-L162
 #
 Access control enforces policy such that users cannot act outside of their intended permissions. Failures typically lead to unauthorized information disclosure, modification, or destruction of all data or performing a business function outside the user's limits. Common access control vulnerabilities include for example violation of the principle of least privilege or deny by default, where access should only be granted for particular capabilities, roles, or users, but is available to anyone. [3].
 
 In my app i wanted that only registereted users with valid login are able add reviews and are able to see others reviews. 
 #
-how to fix it... https://github.com/ollhaa/cs_project/blob/692da7820ee407712c4fe968ff68ee1aede31f23/myapp/beers/views.py#L160-L173
-Comment lines 150-158 off and lines 161-173 on. 
+how to fix it... 
+https://github.com/ollhaa/cs_project/blob/692da7820ee407712c4fe968ff68ee1aede31f23/myapp/beers/views.py#L160-L173
+and 
+https://github.com/ollhaa/cs_project/blob/90a34f0c8f6ad57d6600e17184ad9461505cc7b8/myapp/beers/views.py#L103-L114
+Comment lines 96-102 off and lines 103-114 on.
+Comment lines 150-158 off and lines 164-176 on. 
 
 First of all, there is the registeration and valid login. Without comments unlogged user is able to see reviews. 
 
